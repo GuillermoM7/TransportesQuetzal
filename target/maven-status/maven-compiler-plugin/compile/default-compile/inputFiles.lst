@@ -1,3 +1,14 @@
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\com\mycompany\proyecto1ipc2\JakartaRestConfiguration.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\com\mycompany\proyecto1ipc2\resources\JakartaEE11Resource.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\config\ConexionDB.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\LoginServlet.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\RegistroServlet.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\MantenimientoAcceso.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\UsuarioDAO.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\Bus.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\Chofer.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\enums\Estado.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\enums\EstadoViaje.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\enums\Rol.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\Sucursal.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\Usuario.java
