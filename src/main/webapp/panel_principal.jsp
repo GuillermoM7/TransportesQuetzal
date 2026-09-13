@@ -55,10 +55,10 @@
             <li><a href="#" class="nav-link"><i class="bi bi-ticket-perforated me-2"></i> Comprar Boletos</a></li>
             <li><a href="#" class="nav-link"><i class="bi bi-car-front me-2"></i> Alquiler Privado</a></li>
             
-            <% if (usuario.getRol() == Rol.ADMIN_SUCURSAL || usuario.getRol() == Rol.ADMIN_SIS) { %>
+            <% if (usuario.getRol() == Rol.ADMIN_SUC || usuario.getRol() == Rol.ADMIN_SIS) { %>
                 <li class="seccion-titulo mt-3">Gestión de Sucursal</li>
-                <li><a href="#" class="nav-link"><i class="bi bi-tools me-2"></i> Buses y Mantenimiento</a></li>
-                <li><a href="#" class="nav-link"><i class="bi bi-person-badge me-2"></i> Choferes</a></li>
+                <li><a href="BusServlet" class="nav-link"><i class="bi bi-tools me-2"></i> Buses y Mantenimiento</a></li>
+                <li><a href="ChoferServlet" class="nav-link"><i class="bi bi-person-badge me-2"></i> Choferes</a></li>
                 <li><a href="#" class="nav-link"><i class="bi bi-map me-2"></i> Rutas y Viajes</a></li>
                 <li><a href="#" class="nav-link"><i class="bi bi-file-earmark-bar-graph me-2"></i> Reportes Locales</a></li>
             <% } %>
@@ -66,7 +66,7 @@
             <% if (usuario.getRol() == Rol.ADMIN_SIS) { %>
                 <li class="seccion-titulo mt-3" style="color: #e06666;">Admin Global</li>
                 <li><a href="SucursalServlet" class="nav-link"><i class="bi bi-building me-2"></i> Sucursales</a></li>
-                <li><a href="#" class="nav-link"><i class="bi bi-people me-2"></i> Usuarios</a></li>
+                <li><a href="UsuarioServlet" class="nav-link"><i class="bi bi-people me-2"></i> Usuarios</a></li>
                 <li><a href="#" class="nav-link"><i class="bi bi-gear me-2"></i> Configuración</a></li>
                 <li><a href="#" class="nav-link"><i class="bi bi-graph-up-arrow me-2"></i> Reportes Globales</a></li>
             <% } %>
