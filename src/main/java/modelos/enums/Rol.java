@@ -1,7 +1,7 @@
 package modelos.enums;
 
 public enum Rol {
-    ADMIN_SISTEMA,
+    ADMIN_SIS,
     ADMIN_SUCURSAL,
     CLIENTE   
 }
