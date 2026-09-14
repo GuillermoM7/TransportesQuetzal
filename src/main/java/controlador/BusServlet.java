@@ -45,14 +45,18 @@ public class BusServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogueado");
+        if (usuario.getRol() == Rol.ADMIN_SIS || usuario.getRol() == Rol.CLIENTE) {
+            response.sendRedirect("panel_principal.jsp?error=AccionNoPermitida");
+            return;
+            }
+        
         try {
             String accion = request.getParameter("accion");
             BusDAO dao = new BusDAO();
             
             if ("registrar".equals(accion)) {
                 Bus nuevoBus = new Bus();
-                HttpSession sesion = request.getSession();
-                Usuario usuario = (Usuario) sesion.getAttribute("usuarioLogueado");
                 
                 nuevoBus.setIdSucursal(usuario.getIdSucursalAsignada());
                 nuevoBus.setPlaca(request.getParameter("placa"));

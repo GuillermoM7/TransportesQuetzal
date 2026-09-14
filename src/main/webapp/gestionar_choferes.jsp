@@ -27,9 +27,11 @@
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold" style="color: #333;">Control de Choferes</h3>
-            <button class="btn text-white fw-bold shadow-sm px-4 py-2" style="background-color: #006A4E; border-radius: 8px;" data-bs-toggle="modal" data-bs-target="#modalNuevoChofer">
-                <i class="bi bi-person-plus-fill me-1"></i> Registrar Chofer
-            </button>
+            <% if (usuarioSesion.getRol() == Rol.ADMIN_SUC) { %>
+                <button class="btn text-white fw-bold shadow-sm px-4 py-2" style="background-color: #006A4E; border-radius: 8px;" data-bs-toggle="modal" data-bs-target="#modalNuevoChofer">
+                    <i class="bi bi-person-plus-fill me-1"></i> Registrar Chofer
+                </button>
+            <%}%>   
         </div>
         
         <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
@@ -37,6 +39,10 @@
                 <table class="table table-hover table-striped mb-0 text-center align-middle">
                     <thead class="text-white" style="background-color: #0A3323;">
                         <tr>
+                            <% if (usuarioSesion.getRol() == Rol.ADMIN_SIS) { %>
+                            <th class="py-3">ID Sucursal</th>
+                            <% } %>
+                                                      
                             <th class="py-3">Nombre</th>
                             <th class="py-3">Teléfono</th>
                             <th class="py-3">Licencia</th>
@@ -52,6 +58,10 @@
                                 for (Chofer c : listaChoferes) { 
                         %>
                                 <tr>
+                                    <% if (usuarioSesion.getRol() == Rol.ADMIN_SIS) { %>
+                                    <th class="py-3"><%= c.getIdSucursal() %></th>
+                                    <% } %>
+                                    
                                     <td class="fw-bold py-3"><%= c.getNombre() %></td>
                                     <td class="py-3"><%= c.getTelefono() %></td>
                                     <td class="py-3">
@@ -68,6 +78,7 @@
                                         <% } %>
                                     </td>
                                     <td class="py-3">
+                                        <% if (usuarioSesion.getRol() == Rol.ADMIN_SUC) { %>
                                         <form action="ChoferServlet" method="POST" class="m-0 d-inline">
                                             <input type="hidden" name="accion" value="cambiarEstado">
                                             <input type="hidden" name="idChofer" value="<%= c.getIdChofer() %>">
@@ -80,6 +91,9 @@
                                                 <button type="submit" class="btn btn-sm btn-outline-success" title="Recontratar"><i class="bi bi-person-check-fill"></i></button>
                                             <% } %>
                                         </form>
+                                        <% } else { %>
+                                        <span class="text-muted"><i class="bi bi-lock"></i> Solo lectura</span>
+                                        <% } %>
                                     </td>
                                 </tr>
                         <%      }

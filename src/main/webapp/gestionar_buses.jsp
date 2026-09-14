@@ -27,9 +27,11 @@
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold" style="color: #333;">Control de Flota de Buses</h3>
-            <button class="btn text-white fw-bold shadow-sm px-4 py-2" style="background-color: #006A4E; border-radius: 8px;" data-bs-toggle="modal" data-bs-target="#modalNuevoBus">
-                <i class="bi bi-bus-front me-1"></i> Registrar Nuevo Bus
-            </button>
+            <% if (usuarioSesion.getRol() == Rol.ADMIN_SUC) { %>
+                <button class="btn text-white fw-bold shadow-sm px-4 py-2" style="background-color: #006A4E; border-radius: 8px;" data-bs-toggle="modal" data-bs-target="#modalNuevoBus">
+                    <i class="bi bi-bus-front me-1"></i> Registrar Nuevo Bus
+                </button>
+            <% } %>
         </div>
         
         <div class="card border-0 shadow-sm" style="border-radius: 12px; overflow: hidden;">
@@ -37,6 +39,10 @@
                 <table class="table table-hover table-striped mb-0 text-center align-middle">
                     <thead class="text-white" style="background-color: #0A3323;">
                         <tr>
+                            <% if (usuarioSesion.getRol() == Rol.ADMIN_SIS) { %>
+                            <th class="py-3">ID Sucursal</th>
+                            <% } %>
+                            
                             <th class="py-3">Placa</th>
                             <th class="py-3">Marca y Modelo</th>
                             <th class="py-3">Año</th>
@@ -52,6 +58,10 @@
                                 for (Bus b : listaBuses) { 
                         %>
                                 <tr>
+                                    <% if (usuarioSesion.getRol() == Rol.ADMIN_SIS) { %>
+                                    <td class="py-3"><%= b.getIdSucursal() %></td>
+                                    <% } %>
+                                    
                                     <td class="fw-bold py-3"><%= b.getPlaca() %></td>
                                     <td class="py-3"><%= b.getMarca() %> <%= b.getModelo() %></td>
                                     <td class="py-3"><%= b.getAnio() %></td>
@@ -65,6 +75,7 @@
                                         <% } %>
                                     </td>
                                     <td class="py-3">
+                                        <% if (usuarioSesion.getRol() == Rol.ADMIN_SUC) { %>
                                         <form action="BusServlet" method="POST" class="m-0 d-inline">
                                             <input type="hidden" name="accion" value="cambiarEstado">
                                             <input type="hidden" name="idBus" value="<%= b.getIdBus() %>">
@@ -77,6 +88,9 @@
                                                 <button type="submit" class="btn btn-sm btn-outline-success" title="Reactivar"><i class="bi bi-check-circle-fill"></i></button>
                                             <% } %>
                                         </form>
+                                        <% } else { %>
+                                        <span class="text-muted"><i class="bi bi-lock"></i> Solo lectura</span>
+                                        <% } %>
                                     </td>
                                 </tr>
                         <%      }

@@ -46,17 +46,20 @@ public class ChoferServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        Usuario usuario = (Usuario) request.getSession().getAttribute("usuarioLogueado");
+        if (usuario.getRol() == Rol.ADMIN_SIS || usuario.getRol() == Rol.CLIENTE) {
+            response.sendRedirect("gestionar_choferes.jsp?error=AccionNoPermitida");
+            return;
+            }
+        
         try {
             String accion = request.getParameter("accion");
             ChoferDAO dao = new ChoferDAO();
             
             if ("registrar".equals(accion)) {
                 Chofer nuevoChofer = new Chofer();
-                HttpSession sesion = request.getSession();
-                Usuario usuario = (Usuario) sesion.getAttribute("usuarioLogueado");
                 
-                nuevoChofer.setIdSucursal(usuario.getIdSucursalAsignada());
-                
+                nuevoChofer.setIdSucursal(usuario.getIdSucursalAsignada());                
                 nuevoChofer.setNombre(request.getParameter("nombre"));
                 nuevoChofer.setLicencia(request.getParameter("licencia"));
                 nuevoChofer.setTipoLicencia(request.getParameter("tipoLicencia"));               
