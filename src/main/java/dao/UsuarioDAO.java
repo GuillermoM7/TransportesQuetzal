@@ -34,10 +34,38 @@ public class UsuarioDAO implements MantenimientoAcceso<Usuario>{
         }
     }
 
-    
-    @Override
-    public boolean actualizar(Usuario objeto) {
-        return false;
+  
+    public boolean actualizarPerfil(int idUsuario, String nombre, String nit, String dpi, String telefono, String direccion, String contrasena) {
+        
+        boolean cambiaClave = (contrasena != null && !contrasena.trim().isEmpty());
+        
+        String sql = cambiaClave ? 
+                     "UPDATE usuario SET nombre=?, nit=?, dpi=?, telefono=?, direccion=?, contrasena=? WHERE id_usuario=?" :
+                     "UPDATE usuario SET nombre=?, nit=?, dpi=?, telefono=?, direccion=? WHERE id_usuario=?";
+                     
+        try (java.sql.Connection con = config.ConexionDB.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+             
+            ps.setString(1, nombre);
+            ps.setString(2, nit);
+            ps.setString(3, dpi);
+            ps.setString(4, telefono);
+            ps.setString(5, direccion);
+            
+            if (cambiaClave) {
+                ps.setString(6, contrasena);
+                ps.setInt(7, idUsuario);
+            } else {
+                ps.setInt(6, idUsuario);
+            }
+            
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+            
+        } catch (java.sql.SQLException e) {
+            System.out.println("Error al actualizar perfil completo: " + e.getMessage());
+            return false;
+        }
     }
 
     
@@ -152,5 +180,30 @@ public class UsuarioDAO implements MantenimientoAcceso<Usuario>{
             System.out.println("Error al cambiar estado: " + e.getMessage());
             return false;
         }
+    }
+    
+    
+    public boolean agregarSaldo(int idUsuario, double montoRecarga) {
+        
+        String sql = "UPDATE usuario SET saldo_cartera = saldo_cartera + ? WHERE id_usuario = ?";
+        
+        try (java.sql.Connection con = config.ConexionDB.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+             
+            ps.setDouble(1, montoRecarga);
+            ps.setInt(2, idUsuario);
+            
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+            
+        } catch (java.sql.SQLException e) {
+            System.out.println("Error al recargar saldo: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public boolean actualizar(Usuario objeto) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

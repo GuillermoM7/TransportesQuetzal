@@ -97,8 +97,9 @@
                             <strong><%= usuario.getNombre() %></strong> 
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
-                            <li><a class="dropdown-item" href="#">Recargar Saldo</a></li>
+                            <li><a class="dropdown-item" href="EditarPerfilServlet">Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="RecargarCarteraServlet">Recargar Saldo</a></li>
+                            <li><a class="dropdown-item" href="MisBoletosServlet">Mis Boletos</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger fw-bold" href="CerrarSesionServlet">Cerrar Sesión</a></li>
                         </ul>

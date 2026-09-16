@@ -6,6 +6,7 @@ controlador\ViajePrivadoServlet.class
 controlador\BusServlet.class
 dao\ViajePrivadoDAO.class
 modelos\Sucursal.class
+controlador\RecargarCarteraServlet.class
 modelos\Bus.class
 controlador\ChoferServlet.class
 controlador\UsuarioServlet.class
@@ -18,9 +19,11 @@ modelos\ViajePrivado.class
 controlador\CatalogoViajesServlet.class
 com\mycompany\proyecto1ipc2\resources\JakartaEE11Resource.class
 dao\BusDAO.class
+controlador\ComprarBoletoServlet.class
 com\mycompany\proyecto1ipc2\JakartaRestConfiguration.class
 modelos\enums\Estado.class
 controlador\CerrarSesionServlet.class
+controlador\EditarPerfilServlet.class
 controlador\RutaServlet.class
 controlador\SucursalServlet.class
 modelos\enums\EstadoViajePriv.class
@@ -28,7 +31,10 @@ modelos\Ruta.class
 modelos\Chofer.class
 controlador\MisViajesServlet.class
 modelos\ViajeRegular.class
+dao\BoletoDAO.class
 dao\ChoferDAO.class
 dao\SucursalDAO.class
+modelos\Boleto.class
+controlador\MisBoletosServlet.class
 dao\RutaDAO.class
 controlador\LoginServlet.class

@@ -163,5 +163,41 @@ public class ViajeRegularDAO implements MantenimientoAcceso<ViajeRegular> {
             return false;
         }
     }
+
+    
+    public ViajeRegular obtenerDetallesParaCompra(int idViaje) {
+        ViajeRegular v = null;
+        String sql = "SELECT vr.*, r.precio_boleto, b.capacidad_pasajeros, b.placa, " +
+                     "so.nombre AS nombre_origen, sd.nombre AS nombre_destino " +
+                     "FROM viaje_regular vr " +
+                     "INNER JOIN ruta r ON vr.id_ruta = r.id_ruta " +
+                     "INNER JOIN sucursal so ON r.id_sucursal_origen = so.id_sucursal " +
+                     "INNER JOIN sucursal sd ON r.id_sucursal_destino = sd.id_sucursal " +
+                     "INNER JOIN bus b ON vr.id_bus = b.id_bus " +
+                     "WHERE vr.id_viaje_reg = ?";
+                     
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+             
+            ps.setInt(1, idViaje);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    v = new ViajeRegular();
+                    v.setIdViajeReg(rs.getInt("id_viaje_reg"));
+                    v.setIdRuta(rs.getInt("id_ruta"));
+                    v.setIdBus(rs.getInt("id_bus"));
+                    v.setFechaHoraSalida(rs.getTimestamp("fecha_hora_salida"));
+                    v.setNombreRuta(rs.getString("nombre_origen") + " - " + rs.getString("nombre_destino"));
+                    v.setPrecio(rs.getDouble("precio_boleto"));
+                    v.setPlacaBus(rs.getString("placa"));
+                    
+                    v.setAsientosDisponibles(rs.getInt("capacidad_pasajeros")); 
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al obtener detalles del viaje: " + e.getMessage());
+        }
+        return v;
+    }
     
 }
