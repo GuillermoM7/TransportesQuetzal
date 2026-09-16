@@ -65,22 +65,45 @@ public class RutaDAO implements MantenimientoAcceso<Ruta> {
         return listaRutas;
     }
 
-    
-    public boolean cambiarEstado(int idRuta, String nuevoEstado) {
-        String sql = "UPDATE ruta SET estado = ? WHERE id_ruta = ?";
+    public List<Ruta> listarRutasParaMapa(int idSucursalOrigenFiltro) {
+        List<Ruta> lista = new ArrayList<>();
+        String sql = "SELECT r.id_ruta, " +
+                     "so.latitud AS lat_origen, so.longitud AS lon_origen, " +
+                     "sd.latitud AS lat_destino, sd.longitud AS lon_destino, sd.nombre AS nombre_destino " +
+                     "FROM ruta r " +
+                     "INNER JOIN sucursal so ON r.id_sucursal_origen = so.id_sucursal " +
+                     "INNER JOIN sucursal sd ON r.id_sucursal_destino = sd.id_sucursal " +
+                     "WHERE so.latitud IS NOT NULL AND sd.latitud IS NOT NULL";
+        
+        if (idSucursalOrigenFiltro > 0) {
+            sql += " AND r.id_sucursal_origen = ?";
+        }
         
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             
-            ps.setString(1, nuevoEstado);
-            ps.setInt(2, idRuta);
-            return ps.executeUpdate() > 0;
+            if (idSucursalOrigenFiltro > 0) {
+                ps.setInt(1, idSucursalOrigenFiltro);
+            }
             
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Ruta r = new Ruta();
+                    r.setIdRuta(rs.getInt("id_ruta"));
+                    r.setLatOrigen(rs.getDouble("lat_origen"));
+                    r.setLonOrigen(rs.getDouble("lon_origen"));
+                    r.setLatDestino(rs.getDouble("lat_destino"));
+                    r.setLonDestino(rs.getDouble("lon_destino"));
+                    r.setNombreDestino(rs.getString("nombre_destino"));
+                    lista.add(r);
+                }
+            }
         } catch (SQLException e) {
-            System.out.println("Error al cambiar estado de ruta: " + e.getMessage());
-            return false;
+            System.out.println("Error en mapa de rutas: " + e.getMessage());
         }
+        return lista;
     }
+
 
     
     @Override
@@ -106,6 +129,22 @@ public class RutaDAO implements MantenimientoAcceso<Ruta> {
             
         } catch (SQLException e) {
             System.out.println("Error al eliminar ruta (Posible restricción de llave foránea): " + e.getMessage());
+            return false;
+        }
+    }
+    
+    public boolean cambiarEstado(int idRuta, String nuevoEstado) {
+        String sql = "UPDATE ruta SET estado = ? WHERE id_ruta = ?";
+        
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setString(1, nuevoEstado);
+            ps.setInt(2, idRuta);
+            return ps.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            System.out.println("Error al cambiar estado de ruta: " + e.getMessage());
             return false;
         }
     }

@@ -52,14 +52,15 @@
         <!-- Opciones -->
         <ul class="nav flex-column mb-auto">
             <li class="seccion-titulo">Servicios</li>
-            <li><a href="#" class="nav-link"><i class="bi bi-geo-alt me-2"></i> Viajes Programados</a></li>
-            <li><a href="#" class="nav-link"><i class="bi bi-ticket-perforated me-2"></i> Comprar Boletos</a></li>
-            <li><a href="#" class="nav-link"><i class="bi bi-car-front me-2"></i> Alquiler Privado</a></li>
+            <li><a href="CatalogoViajesServlet" class="nav-link"><i class="bi bi-ticket-perforated me-2"></i> Comprar Boletos</a></li>
+            <li><a href="MisViajesServlet" class="nav-link"><i class="bi bi-car-front me-2"></i> Alquiler Privado</a></li>
             
             <% if (usuario.getRol() == Rol.ADMIN_SUC || usuario.getRol() == Rol.ADMIN_SIS) { %>
                 <li class="seccion-titulo mt-3">Gestión de Sucursal</li>
                 <li><a href="BusServlet" class="nav-link"><i class="bi bi-tools me-2"></i> Buses y Mantenimiento</a></li>
                 <li><a href="ChoferServlet" class="nav-link"><i class="bi bi-person-badge me-2"></i> Choferes</a></li>
+                <li><a href="ViajeRegularServlet" class="nav-link"><i class="bi bi-calendar-event me-2"></i> Control de viajes regulares</a></li>
+                <li><a href="ViajePrivadoServlet" class="nav-link"><i class="bi bi-calendar-event me-2"></i> Control de viajes privados</a></li>
                 <% if (usuario.getRol() == Rol.ADMIN_SUC) { %>
                 <li><a href="RutaServlet" class="nav-link"><i class="bi bi-map me-2"></i> Rutas y Viajes</a></li>
                 <li><a href="#" class="nav-link"><i class="bi bi-file-earmark-bar-graph me-2"></i> Reportes Locales</a></li>

@@ -91,6 +91,7 @@ public class UsuarioDAO implements MantenimientoAcceso<Usuario>{
             try (java.sql.ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     usuario = new Usuario();
+                    usuario.setIdUsuario(rs.getInt("id_usuario"));
                     usuario.setDpi(rs.getString("dpi"));
                     usuario.setNombre(rs.getString("nombre"));
                     usuario.setNit(rs.getString("nit"));

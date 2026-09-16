@@ -43,6 +43,8 @@ public class SucursalDAO implements MantenimientoAcceso<Sucursal> {
                 suc.setIdSucursal(rs.getInt("id_sucursal")); 
                 suc.setNombre(rs.getString("nombre"));
                 suc.setDireccion(rs.getString("direccion"));
+                suc.setLatitud(rs.getDouble("latitud"));
+                suc.setLongitud(rs.getDouble("longitud"));
                 
                 listaSucursales.add(suc);
             }

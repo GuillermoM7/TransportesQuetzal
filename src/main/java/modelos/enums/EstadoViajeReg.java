@@ -1,7 +1,7 @@
 package modelos.enums;
 
-public enum EstadoViaje {
+public enum EstadoViajeReg {
     PROGRAMADO,
-    EN_TRANSITO,
+    EN_CURSO,
     FINALIZADO
 }

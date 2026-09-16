@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Transportes Quetzal - Inicio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <jsp:include page="head.jsp" />
     <style>
         .hero-section {
             background: linear-gradient(rgba(0, 106, 78, 0.75), rgba(10, 51, 35, 0.9)), 
