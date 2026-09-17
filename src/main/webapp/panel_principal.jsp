@@ -63,7 +63,39 @@
                 <li><a href="ViajePrivadoServlet" class="nav-link"><i class="bi bi-calendar-event me-2"></i> Control de viajes privados</a></li>
                 <% if (usuario.getRol() == Rol.ADMIN_SUC) { %>
                 <li><a href="RutaServlet" class="nav-link"><i class="bi bi-map me-2"></i> Rutas y Viajes</a></li>
-                <li><a href="#" class="nav-link"><i class="bi bi-file-earmark-bar-graph me-2"></i> Reportes Locales</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="menuReportes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-file-earmark-bar-graph me-2"></i> Reportes Locales
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark shadow-sm border-0" aria-labelledby="menuReportes">
+                        <li>
+                            <a class="dropdown-item" href="ReportesSucursalServlet?tipo=buses">
+                                <i class="bi bi-bus-front me-2 text-info"></i> Listado de Buses
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="ReportesSucursalServlet?tipo=choferes">
+                                <i class="bi bi-person-vcard me-2 text-success"></i> Listado de Choferes
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="ReportesSucursalServlet?tipo=depreciacion">
+                                <i class="bi bi-graph-down-arrow me-2 text-danger"></i> Reporte de Depreciación
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider border-secondary"></li>
+                        <li>
+                            <a class="dropdown-item" href="ReportesSucursalServlet?tipo=ingresos_boletos">
+                                <i class="bi bi-ticket-perforated me-2 text-warning"></i> Ingresos por Boletos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="ReportesSucursalServlet?tipo=ingresos_alquiler">
+                                <i class="bi bi-cash-stack me-2 text-primary"></i> Ingresos por Alquiler
+                            </a>
+                        </li>
+                    </ul>
+                </li>
                 <% } %>
             <% } %>
 
@@ -72,7 +104,34 @@
                 <li><a href="SucursalServlet" class="nav-link"><i class="bi bi-building me-2"></i> Sucursales</a></li>
                 <li><a href="UsuarioServlet" class="nav-link"><i class="bi bi-people me-2"></i> Usuarios</a></li>
                 <li><a href="ConfiguracionAdminServlet" class="nav-link"><i class="bi bi-gear me-2"></i> Configuración</a></li>
-                <li><a href="#" class="nav-link"><i class="bi bi-graph-up-arrow me-2"></i> Reportes Globales</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="menuReportesAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-pie-chart-fill me-2"></i> Reportes Gerenciales
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark shadow-sm border-0" aria-labelledby="menuReportesAdmin">
+                        <li>
+                            <a class="dropdown-item" href="ReportesAdminServlet?tipo=ganancias">
+                                <i class="bi bi-cash-coin me-2 text-success"></i> Ganancias Netas
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="ReportesAdminServlet?tipo=costos">
+                                <i class="bi bi-tools me-2 text-danger"></i> Costos Operativos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="ReportesAdminServlet?tipo=rutas">
+                                <i class="bi bi-signpost-split me-2 text-warning"></i> Rutas Más Demandadas
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider border-secondary"></li>
+                        <li>
+                            <a class="dropdown-item" href="ReportesAdminServlet?tipo=mapa_rutas">
+                                <i class="bi bi-geo-alt-fill me-2 text-info"></i> Mapa de Rutas Activas
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             <% } %>
         </ul>
     </div>

@@ -50,7 +50,7 @@ public class ControlViajeDAO {
     }
     
     
-public boolean finalizarViajeSeguro(ControlViaje control, String tipoViaje, double costoDepreciacionPorKm) {
+    public boolean finalizarViajeSeguro(ControlViaje control, String tipoViaje, double costoDepreciacionPorKm) {
         boolean esRegular = "regular".equalsIgnoreCase(tipoViaje);
         int idViaje = esRegular ? control.getIdViajeReg() : control.getIdViajePriv();
 
