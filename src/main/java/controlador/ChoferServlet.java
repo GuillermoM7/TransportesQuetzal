@@ -75,6 +75,34 @@ public class ChoferServlet extends HttpServlet {
                 int idChofer = Integer.parseInt(request.getParameter("idChofer"));
                 String nuevoEstado = request.getParameter("nuevoEstado");
                 dao.cambiarEstado(idChofer, nuevoEstado);
+                
+            }else if("actualizar".equals(accion)){
+                try {
+                    Chofer chofer = new Chofer();
+                    chofer.setIdChofer(Integer.parseInt(request.getParameter("idChofer")));
+                    chofer.setNombre(request.getParameter("nombre"));
+                    chofer.setLicencia(request.getParameter("licencia"));
+                    chofer.setTipoLicencia(request.getParameter("tipoLicencia"));              
+                    String fechaStr = request.getParameter("fechaVencimiento");
+                    chofer.setFechaVencimiento(java.sql.Date.valueOf(fechaStr));               
+                    chofer.setTelefono(request.getParameter("telefono"));
+                    chofer.setSalarioBase(Double.parseDouble(request.getParameter("salarioBase")));
+                    chofer.setFoto(request.getParameter("fotoUrl"));
+                
+                    boolean exito = dao.actualizar(chofer);
+                
+                    if (exito) {
+                        response.sendRedirect("ChoferServlet?msg=choferActualizado"); 
+                        return;
+                    } else {
+                        response.sendRedirect("ChoferServlet?error=db");
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendRedirect("ChoferServlet?error=formato");
+                    return;
+                }
             }
             
             response.sendRedirect("ChoferServlet");

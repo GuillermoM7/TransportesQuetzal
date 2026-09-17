@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import modelos.ViajePrivado;
 
 @WebServlet(name = "ViajePrivadoServlet", urlPatterns = {"/ViajePrivadoServlet"})
 public class ViajePrivadoServlet extends HttpServlet {
@@ -88,6 +89,50 @@ public class ViajePrivadoServlet extends HttpServlet {
                 int idViaje = Integer.parseInt(request.getParameter("idViaje"));
                 String nuevoEstado = request.getParameter("nuevoEstado"); 
                 dao.cambiarEstado(idViaje, nuevoEstado);
+
+            } else if ("actualizar".equals(accion)) {
+                try {
+                    ViajePrivado v = new ViajePrivado();
+                    v.setIdViajePriv(Integer.parseInt(request.getParameter("idViaje")));
+                    v.setOrigen(request.getParameter("origen"));
+                    v.setDestino(request.getParameter("destino"));
+                    v.setCantidadPasajeros(Integer.parseInt(request.getParameter("pasajeros")));
+                    v.setPrecioEstimado(Double.parseDouble(request.getParameter("precio")));
+                    String salidaStr = request.getParameter("fechaSalida").replace("T", " ") + ":00";
+                    String retornoStr = request.getParameter("fechaRetorno").replace("T", " ") + ":00";
+                    v.setFechaHoraSalida(java.sql.Timestamp.valueOf(salidaStr));
+                    v.setFechaHoraRetorno(java.sql.Timestamp.valueOf(retornoStr));                   
+                    boolean exito = dao.actualizarViajePrivado(v);
+                    
+                    if (exito) {
+                        response.sendRedirect("ViajePrivadoServlet?msg=viajeActualizado");
+                        return;
+                    } else {
+                        response.sendRedirect("ViajePrivadoServlet?error=estadoNoPermitido");
+                        return;
+                    }
+                } catch (Exception e) {
+                    response.sendRedirect("ViajePrivadoServlet?error=formato");
+                    return;
+                }
+                
+
+            } else if ("eliminar".equals(accion)) {
+                try {
+                    int idViaje = Integer.parseInt(request.getParameter("idViaje"));
+                    boolean exito = dao.eliminarViajePrivado(idViaje);
+                    
+                    if (exito) {
+                        response.sendRedirect("ViajePrivadoServlet?msg=viajeEliminado");
+                        return;
+                    } else {
+                        response.sendRedirect("ViajePrivadoServlet?error=noSePudoEliminar");
+                        return;
+                    }
+                } catch (Exception e) {
+                    response.sendRedirect("ViajePrivadoServlet?error=true");
+                    return;
+                }
             }
             
             response.sendRedirect("ViajePrivadoServlet");

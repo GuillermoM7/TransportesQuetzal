@@ -91,9 +91,14 @@
                                                 <button type="submit" class="btn btn-sm btn-outline-success" title="Recontratar"><i class="bi bi-person-check-fill"></i></button>
                                             <% } %>
                                         </form>
+                                        <button type="button" class="btn btn-sm btn-outline-primary ms-1" title="Editar Datos" 
+                                            onclick="abrirModalEditarChofer(<%= c.getIdChofer() %>, '<%= c.getNombre() %>', '<%= c.getTelefono() %>', '<%= c.getLicencia() %>', '<%= c.getTipoLicencia() %>', '<%= c.getFechaVencimiento() %>', <%= c.getSalarioBase() %>, '<%= c.getFoto() != null ? c.getFoto() : "" %>')">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
                                         <% } else { %>
                                         <span class="text-muted"><i class="bi bi-lock"></i> Solo lectura</span>
                                         <% } %>
+
                                     </td>
                                 </tr>
                         <%      }
@@ -162,6 +167,85 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal fade" id="modalEditarChofer" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg"> 
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white" style="background-color: #0A3323;">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-person-badge-fill me-2"></i>Editar Datos del Chofer</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="ChoferServlet" method="POST"> 
+                    <input type="hidden" name="accion" value="actualizar">
+                    <input type="hidden" name="idChofer" id="editIdChofer">
+                    
+                    <div class="modal-body p-4 row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold text-muted">Nombre Completo</label>
+                            <input type="text" class="form-control bg-light" name="nombre" id="editNombre" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Teléfono</label>
+                            <input type="text" class="form-control bg-light" name="telefono" id="editTelefono" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Salario Base (Q.)</label>
+                            <input type="number" step="0.01" min="0" class="form-control bg-light" name="salarioBase" id="editSalarioBase" required>
+                        </div>
+                        <hr class="mt-4 mb-2">
+                        <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-card-heading me-1"></i> Datos de Licencia</h6>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-muted">Número de Licencia</label>
+                            <input type="text" class="form-control bg-light" name="licencia" id="editLicencia" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-muted">Tipo</label>
+                            <select class="form-select bg-light" name="tipoLicencia" id="editTipoLicencia" required>
+                                <option value="A">Tipo A</option>
+                                <option value="B">Tipo B</option>
+                                <option value="C">Tipo C</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold text-muted">Vencimiento</label>
+                            <input type="date" class="form-control bg-light" name="fechaVencimiento" id="editFechaVencimiento" required>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <label class="form-label fw-bold text-muted">URL de Fotografía (Opcional)</label>
+                            <input type="url" class="form-control bg-light" name="fotoUrl" id="editFotoUrl" placeholder="https://ejemplo.com/foto.jpg">
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn text-white fw-bold px-4" style="background-color: #006A4E;">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function abrirModalEditarChofer(id, nombre, telefono, licencia, tipoLicencia, fechaVenc, salario, fotoUrl) {
+            document.getElementById('editIdChofer').value = id;
+            document.getElementById('editNombre').value = nombre;
+            document.getElementById('editTelefono').value = telefono;
+            document.getElementById('editLicencia').value = licencia;
+            document.getElementById('editFechaVencimiento').value = fechaVenc.substring(0, 10);           
+            document.getElementById('editSalarioBase').value = salario;
+            document.getElementById('editFotoUrl').value = fotoUrl;
+            
+            let selectTipo = document.getElementById('editTipoLicencia');
+            for(let i = 0; i < selectTipo.options.length; i++) {
+                if(selectTipo.options[i].value.toUpperCase() === tipoLicencia.toUpperCase()) {
+                    selectTipo.selectedIndex = i;
+                    break;
+                }
+            }
+            
+            var myModal = new bootstrap.Modal(document.getElementById('modalEditarChofer'));
+            myModal.show();
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

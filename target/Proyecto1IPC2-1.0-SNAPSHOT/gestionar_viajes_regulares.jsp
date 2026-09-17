@@ -80,6 +80,16 @@
                                                 <button type="button" class="btn btn-sm btn-outline-primary" title="Iniciar Viaje" onclick="abrirModalSalida(<%= v.getIdViajeReg() %>, 'regular', <%= v.getKilometrajeBus() %>)">
                                                     <i class="bi bi-play-circle-fill"></i> Iniciar
                                                 </button>
+                                                    
+                                                <button type="button" class="btn btn-sm btn-outline-warning ms-1" title="Editar Fechas" onclick="abrirModalEditarViajeReg(<%= v.getIdViajeReg() %>, '<%= v.getFechaHoraSalida().toString().replace(" ", "T").substring(0, 16) %>', '<%= v.getFechaHoraLlegadaEstimada().toString().replace(" ", "T").substring(0, 16) %>')">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </button>
+                                            
+                                                <form action="ViajeRegularServlet" method="POST" class="m-0 d-inline ms-1" onsubmit="return confirm('¿Estás seguro de eliminar este viaje programado? Esta acción no se puede deshacer.');">
+                                                    <input type="hidden" name="accion" value="eliminar">
+                                                    <input type="hidden" name="idViaje" value="<%= v.getIdViajeReg() %>">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar Viaje"><i class="bi bi-trash-fill"></i></button>
+                                                </form>
                                             <% } else if("en_curso".equalsIgnoreCase(v.getEstado())) { %>
                                                 <button type="button" class="btn btn-sm btn-outline-success" title="Finalizar Viaje" onclick="abrirModalLlegada(<%= v.getIdViajeReg() %>, 'regular', <%= v.getKilometrajeInicial() %>)">
                                                     <i class="bi bi-check-circle-fill"></i> Finalizar
@@ -274,6 +284,36 @@
                 </form>
             </div>
         </div>
+    </div>
+                            
+    <div class="modal fade" id="modalEditarViajeReg" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white bg-warning">
+                    <h5 class="modal-title fw-bold text-dark"><i class="bi bi-pencil-square me-2"></i>Editar Fechas del Viaje</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="ViajeRegularServlet" method="POST">
+                    <input type="hidden" name="accion" value="actualizar">
+                    <input type="hidden" name="idViaje" id="editRegIdViaje">
+                    
+                    <div class="modal-body p-4 row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold text-muted">Fecha y Hora de Salida</label>
+                            <input type="datetime-local" class="form-control bg-light" name="fechaHoraSalida" id="editRegSalida" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold text-muted">Fecha y Hora de Llegada Estimada</label>
+                            <input type="datetime-local" class="form-control bg-light" name="fechaHoraLlegada" id="editRegLlegada" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning fw-bold text-dark px-4">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>                        
     
     <% } %> 
@@ -302,6 +342,15 @@
             inputKmFinal.value = ""; 
             
             var myModal = new bootstrap.Modal(document.getElementById('modalFinalizarViaje'));
+            myModal.show();
+        }
+        
+        function abrirModalEditarViajeReg(id, salida, llegada) {
+            document.getElementById('editRegIdViaje').value = id;
+            document.getElementById('editRegSalida').value = salida;
+            document.getElementById('editRegLlegada').value = llegada;
+            
+            var myModal = new bootstrap.Modal(document.getElementById('modalEditarViajeReg'));
             myModal.show();
         }
     </script>

@@ -73,6 +73,32 @@ public class BusServlet extends HttpServlet {
                 int idBus = Integer.parseInt(request.getParameter("idBus"));
                 String nuevoEstado = request.getParameter("nuevoEstado");
                 dao.cambiarEstado(idBus, nuevoEstado);
+                
+            } else if ("actualizar".equals(accion)){
+                try {
+                    Bus bus = new Bus();
+                    bus.setIdBus(Integer.parseInt(request.getParameter("idBus")));
+                    bus.setPlaca(request.getParameter("placa"));
+                    bus.setMarca(request.getParameter("marca"));
+                    bus.setModelo(request.getParameter("modelo"));
+                    bus.setAnio(Integer.parseInt(request.getParameter("anio")));
+                    bus.setCapacidad(Integer.parseInt(request.getParameter("capacidadPasajeros")));
+                    bus.setFoto(request.getParameter("fotoUrl")); 
+                
+                    boolean exito = dao.actualizar(bus);
+                
+                    if (exito) {
+                        response.sendRedirect("BusServlet?msg=busActualizado");
+                        return;
+                    } else {
+                        response.sendRedirect("BusServlet?error=db");
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendRedirect("BusServlet?error=formato");
+                    return;
+                }
             }
             
             response.sendRedirect("BusServlet");

@@ -88,9 +88,18 @@
                                                 <button type="submit" class="btn btn-sm btn-outline-success" title="Reactivar"><i class="bi bi-check-circle-fill"></i></button>
                                             <% } %>
                                         </form>
+                                        <button type="button" class="btn btn-sm btn-outline-primary ms-1" title="Editar Datos" 
+                                            onclick="abrirModalEditarBus(<%= b.getIdBus() %>, '<%= b.getPlaca() %>', '<%= b.getMarca() %>', '<%= b.getModelo() %>', <%= b.getAnio() %>, <%= b.getCapacidad() %>, '<%= b.getFoto() != null ? b.getFoto() : "" %>')">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary ms-1" title="Registrar Mantenimiento" 
+                                            onclick="abrirModalMantenimiento(<%= b.getIdBus() %>, '<%= b.getPlaca() %>')">
+                                            <i class="bi bi-tools"></i>
+                                        </button>    
                                         <% } else { %>
                                         <span class="text-muted"><i class="bi bi-lock"></i> Solo lectura</span>
                                         <% } %>
+ 
                                     </td>
                                 </tr>
                         <%      }
@@ -155,6 +164,113 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal fade" id="modalEditarBus" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white" style="background-color: #0A3323;">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-bus-front me-2"></i>Editar Unidad</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="BusServlet" method="POST"> 
+                    <input type="hidden" name="accion" value="actualizar">
+                    <input type="hidden" name="idBus" id="editIdBus">
+                    
+                    <div class="modal-body p-4 row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Placa</label>
+                            <input type="text" class="form-control bg-light" name="placa" id="editPlaca" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Capacidad (Pasajeros)</label>
+                            <input type="number" class="form-control bg-light" name="capacidadPasajeros" id="editCapacidad" min="1" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Marca</label>
+                            <input type="text" class="form-control bg-light" name="marca" id="editMarca" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Modelo</label>
+                            <input type="text" class="form-control bg-light" name="modelo" id="editModelo" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold text-muted">Año</label>
+                            <input type="number" class="form-control bg-light" name="anio" id="editAnio" min="1990" max="2030" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold text-muted">URL de Fotografía (Opcional)</label>
+                            <input type="url" class="form-control bg-light" name="fotoUrl" id="editFotoUrl" placeholder="https://ejemplo.com/foto.jpg">
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn text-white fw-bold px-4" style="background-color: #006A4E;">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="modalMantenimiento" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white" style="background-color: #495057;">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-tools me-2"></i>Registrar Mantenimiento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="MantenimientoServlet" method="POST">
+                    <input type="hidden" name="accion" value="registrar">
+                    <input type="hidden" name="idBus" id="mantIdBus">
+                
+                    <div class="modal-body p-4">
+                        <div class="alert alert-secondary text-center fw-bold" id="mantPlacaTexto">                         
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted">Monto por Mano de Obra (Q.)</label>
+                            <input type="number" class="form-control" name="manoObra" step="0.01" min="0" value="0.00" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted">Monto por Repuestos (Q.)</label>
+                            <input type="number" class="form-control" name="repuestos" step="0.01" min="0" value="0.00" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted">Fecha del Mantenimiento</label>
+                            <input type="date" class="form-control" name="fechaMantenimiento" id="mantFecha" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-dark fw-bold px-4">Guardar Gasto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function abrirModalEditarBus(id, placa, marca, modelo, anio, capacidad, fotoUrl) {
+            document.getElementById('editIdBus').value = id;
+            document.getElementById('editPlaca').value = placa;
+            document.getElementById('editMarca').value = marca;
+            document.getElementById('editModelo').value = modelo;
+            document.getElementById('editAnio').value = anio;
+            document.getElementById('editCapacidad').value = capacidad;
+            document.getElementById('editFotoUrl').value = fotoUrl;
+            
+            var myModal = new bootstrap.Modal(document.getElementById('modalEditarBus'));
+            myModal.show();
+        }
+        
+        function abrirModalMantenimiento(idBus, placa) {
+            document.getElementById('mantIdBus').value = idBus;
+            document.getElementById('mantPlacaTexto').innerText = "Bus Placa: " + placa;
+            document.getElementById('mantFecha').valueAsDate = new Date();
+        
+            var modal = new bootstrap.Modal(document.getElementById('modalMantenimiento'));
+            modal.show();
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -95,8 +95,28 @@ public class ChoferDAO implements MantenimientoAcceso<Chofer> {
     }
 
     @Override
-    public boolean actualizar(Chofer objeto) {
-        return false;
+    public boolean actualizar(Chofer chofer) {
+        String sql = "UPDATE chofer SET nombre = ?, licencia = ?, tipo_licencia = ?, fecha_vencimiento = ?, telefono = ?, salario_base = ?, foto_url = ? WHERE id_chofer = ?";
+        
+        try (java.sql.Connection con = config.ConexionDB.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+             
+            ps.setString(1, chofer.getNombre());
+            ps.setString(2, chofer.getLicencia());
+            ps.setString(3, chofer.getTipoLicencia());
+            ps.setDate(4, new java.sql.Date(chofer.getFechaVencimiento().getTime())); 
+            ps.setString(5, chofer.getTelefono());
+            ps.setDouble(6, chofer.getSalarioBase());
+            ps.setString(7, chofer.getFoto());
+            ps.setInt(8, chofer.getIdChofer());
+            
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+            
+        } catch (java.sql.SQLException e) {
+            System.out.println("Error al actualizar chofer: " + e.getMessage());
+            return false;
+        }
     }
 
     @Override

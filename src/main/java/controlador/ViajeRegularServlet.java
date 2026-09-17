@@ -109,6 +109,47 @@ public class ViajeRegularServlet extends HttpServlet {
                 int idViaje = Integer.parseInt(request.getParameter("idViaje"));
                 String nuevoEstado = request.getParameter("nuevoEstado"); 
                 dao.cambiarEstado(idViaje, nuevoEstado);
+ 
+            } else if ("actualizar".equals(accion)) {
+                try {
+                    int idViaje = Integer.parseInt(request.getParameter("idViaje"));
+                    
+                    String salidaStr = request.getParameter("fechaHoraSalida").replace("T", " ") + ":00";
+                    String llegadaStr = request.getParameter("fechaHoraLlegada").replace("T", " ") + ":00";
+                    
+                    java.sql.Timestamp nuevaSalida = java.sql.Timestamp.valueOf(salidaStr);
+                    java.sql.Timestamp nuevaLlegada = java.sql.Timestamp.valueOf(llegadaStr);
+                    
+                    boolean exito = dao.actualizarFechasViaje(idViaje, nuevaSalida, nuevaLlegada);
+                    
+                    if (exito) {
+                        response.sendRedirect("ViajeRegularServlet?msg=viajeActualizado");
+                        return;
+                    } else {
+                        response.sendRedirect("ViajeRegularServlet?error=estadoNoPermitido");
+                        return;
+                    }
+                } catch (Exception e) {
+                    response.sendRedirect("ViajeRegularServlet?error=formato");
+                    return;
+                }
+                
+            } else if ("eliminar".equals(accion)) {
+                try {
+                    int idViaje = Integer.parseInt(request.getParameter("idViaje"));
+                    boolean exito = dao.eliminarViaje(idViaje);
+                    
+                    if (exito) {
+                        response.sendRedirect("ViajeRegularServlet?msg=viajeEliminado");
+                        return;
+                    } else {
+                        response.sendRedirect("ViajeRegularServlet?error=noSePudoEliminar");
+                        return;
+                    }
+                } catch (Exception e) {
+                    response.sendRedirect("ViajeRegularServlet?error=true");
+                    return;
+                }
             }
             
             response.sendRedirect("ViajeRegularServlet");

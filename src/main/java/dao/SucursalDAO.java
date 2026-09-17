@@ -13,13 +13,15 @@ public class SucursalDAO implements MantenimientoAcceso<Sucursal> {
 
     @Override
     public boolean insertar(Sucursal sucursal) {
-        String sql = "INSERT INTO sucursal (nombre, direccion) VALUES (?, ?)";
+        String sql = "INSERT INTO sucursal (nombre, direccion, latitud, longitud) VALUES (?, ?, ?, ?)";
         
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             
             ps.setString(1, sucursal.getNombre());
             ps.setString(2, sucursal.getDireccion());
+            ps.setDouble(3, sucursal.getLatitud());
+            ps.setDouble(4, sucursal.getLongitud());
             
             return ps.executeUpdate() > 0;
             
@@ -58,7 +60,23 @@ public class SucursalDAO implements MantenimientoAcceso<Sucursal> {
 
     @Override
     public boolean actualizar(Sucursal sucursal) {
-        return false;
+        String sql = "UPDATE sucursal SET nombre = ?, direccion = ?, latitud = ?, longitud = ? WHERE id_sucursal = ?";
+        
+        try (Connection con = ConexionDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+             
+            ps.setString(1, sucursal.getNombre());
+            ps.setString(2, sucursal.getDireccion());
+            ps.setDouble(3, sucursal.getLatitud());
+            ps.setDouble(4, sucursal.getLongitud());
+            ps.setInt(5, sucursal.getIdSucursal());
+            
+            return ps.executeUpdate() > 0;
+            
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar sucursal: " + e.getMessage());
+            return false;
+        }
     }
 
     @Override

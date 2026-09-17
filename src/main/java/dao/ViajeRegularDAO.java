@@ -203,4 +203,59 @@ public class ViajeRegularDAO implements MantenimientoAcceso<ViajeRegular> {
         return v;
     }
     
+
+    public boolean actualizarFechasViaje(int idViaje, java.sql.Timestamp nuevaSalida, java.sql.Timestamp nuevaLlegada) {
+        String sql = "UPDATE viaje_regular SET fecha_hora_salida = ?, fecha_hora_llegada_estimada = ? WHERE id_viaje_reg = ? AND estado = 'programado'";
+        
+        try (java.sql.Connection con = config.ConexionDB.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+             
+            ps.setTimestamp(1, nuevaSalida);
+            ps.setTimestamp(2, nuevaLlegada);
+            ps.setInt(3, idViaje);
+            
+            return ps.executeUpdate() > 0;
+            
+        } catch (java.sql.SQLException e) {
+            System.out.println("Error al actualizar fechas de viaje regular: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    public boolean eliminarViaje(int idViaje) {
+        String sqlDeleteControl = "DELETE FROM control_viaje WHERE id_viaje_reg = ?";
+        String sqlDeleteViaje = "DELETE FROM viaje_regular WHERE id_viaje_reg = ? AND estado = 'programado'";
+        
+        try (java.sql.Connection con = config.ConexionDB.getConnection()) {
+            con.setAutoCommit(false); 
+            try {
+                try (java.sql.PreparedStatement psControl = con.prepareStatement(sqlDeleteControl)) {
+                    psControl.setInt(1, idViaje);
+                    psControl.executeUpdate();
+                }
+                
+                int filasAfectadas = 0;
+                try (java.sql.PreparedStatement psViaje = con.prepareStatement(sqlDeleteViaje)) {
+                    psViaje.setInt(1, idViaje);
+                    filasAfectadas = psViaje.executeUpdate();
+                }
+                
+                if (filasAfectadas > 0) {
+                    con.commit();
+                    return true;
+                } else {
+                    con.rollback(); 
+                    return false;
+                }
+            } catch (java.sql.SQLException ex) {
+                con.rollback();
+                return false;
+            }
+        } catch (java.sql.SQLException e) {
+            System.out.println("Error al eliminar viaje regular: " + e.getMessage());
+            return false;
+        }
+    }
+    
 }

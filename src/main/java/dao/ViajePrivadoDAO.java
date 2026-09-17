@@ -236,4 +236,64 @@ public class ViajePrivadoDAO implements MantenimientoAcceso<ViajePrivado> {
             return false;
         }
     }
+    
+
+    public boolean actualizarViajePrivado(ViajePrivado v) {
+        String sql = "UPDATE viaje_privado SET origen = ?, destino = ?, fecha_hora_salida = ?, fecha_hora_retorno = ?, cantidad_pasajeros = ?, precio_estimado = ? " +
+                     "WHERE id_viaje_priv = ? AND estado IN ('solicitado', 'cotizado')";
+        
+        try (java.sql.Connection con = config.ConexionDB.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+             
+            ps.setString(1, v.getOrigen());
+            ps.setString(2, v.getDestino());
+            ps.setTimestamp(3, v.getFechaHoraSalida());
+            ps.setTimestamp(4, v.getFechaHoraRetorno());
+            ps.setInt(5, v.getCantidadPasajeros());
+            ps.setDouble(6, v.getPrecioEstimado());
+            ps.setInt(7, v.getIdViajePriv());
+            
+            return ps.executeUpdate() > 0;
+            
+        } catch (java.sql.SQLException e) {
+            System.out.println("Error al actualizar viaje privado: " + e.getMessage());
+            return false;
+        }
+    }
+
+ 
+    public boolean eliminarViajePrivado(int idViaje) {
+        String sqlDeleteControl = "DELETE FROM control_viaje WHERE id_viaje_priv = ?";
+        String sqlDeleteViaje = "DELETE FROM viaje_privado WHERE id_viaje_priv = ? AND estado IN ('solicitado', 'cotizado')";
+        
+        try (java.sql.Connection con = config.ConexionDB.getConnection()) {
+            con.setAutoCommit(false);
+            try {
+                try (java.sql.PreparedStatement psControl = con.prepareStatement(sqlDeleteControl)) {
+                    psControl.setInt(1, idViaje);
+                    psControl.executeUpdate();
+                }
+                
+                int filasAfectadas = 0;
+                try (java.sql.PreparedStatement psViaje = con.prepareStatement(sqlDeleteViaje)) {
+                    psViaje.setInt(1, idViaje);
+                    filasAfectadas = psViaje.executeUpdate();
+                }
+                
+                if (filasAfectadas > 0) {
+                    con.commit();
+                    return true;
+                } else {
+                    con.rollback();
+                    return false;
+                }
+            } catch (java.sql.SQLException ex) {
+                con.rollback();
+                return false;
+            }
+        } catch (java.sql.SQLException e) {
+            System.out.println("Error al eliminar viaje privado: " + e.getMessage());
+            return false;
+        }
+    }
 }

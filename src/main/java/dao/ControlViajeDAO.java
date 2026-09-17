@@ -50,15 +50,24 @@ public class ControlViajeDAO {
     }
     
     
-    public boolean finalizarViajeSeguro(ControlViaje control, String tipoViaje, double costoDepreciacionPorKm) {
+public boolean finalizarViajeSeguro(ControlViaje control, String tipoViaje, double costoDepreciacionPorKm) {
         boolean esRegular = "regular".equalsIgnoreCase(tipoViaje);
         int idViaje = esRegular ? control.getIdViajeReg() : control.getIdViajePriv();
 
         String sqlSelect = esRegular ? 
-            "SELECT cv.id_control, cv.kilometraje_inicial, v.id_bus FROM control_viaje cv INNER JOIN viaje_regular v ON cv.id_viaje_reg = v.id_viaje_reg WHERE cv.id_viaje_reg = ?" : 
-            "SELECT cv.id_control, cv.kilometraje_inicial, v.id_bus FROM control_viaje cv INNER JOIN viaje_privado v ON cv.id_viaje_priv = v.id_viaje_priv WHERE cv.id_viaje_priv = ?";
+            "SELECT cv.id_control, cv.kilometraje_inicial, v.id_bus, c.salario_base " +
+            "FROM control_viaje cv " +
+            "INNER JOIN viaje_regular v ON cv.id_viaje_reg = v.id_viaje_reg " +
+            "INNER JOIN chofer c ON v.id_chofer = c.id_chofer " +
+            "WHERE cv.id_viaje_reg = ?" 
+            : 
+            "SELECT cv.id_control, cv.kilometraje_inicial, v.id_bus, c.salario_base " +
+            "FROM control_viaje cv " +
+            "INNER JOIN viaje_privado v ON cv.id_viaje_priv = v.id_viaje_priv " +
+            "INNER JOIN chofer c ON v.id_chofer = c.id_chofer " +
+            "WHERE cv.id_viaje_priv = ?";
 
-        String sqlUpdateControl = "UPDATE control_viaje SET hora_real_llegada = ?, kilometraje_final = ?, gasto_combustible = ?, monto_depreciacion_aplicado = ? WHERE id_control = ?";
+        String sqlUpdateControl = "UPDATE control_viaje SET hora_real_llegada = ?, kilometraje_final = ?, gasto_combustible = ?, monto_depreciacion_aplicado = ?, pago_chofer_aplicado = ? WHERE id_control = ?";
         
         String sqlUpdateEstado = esRegular ? 
             "UPDATE viaje_regular SET estado = 'finalizado' WHERE id_viaje_reg = ?" : 
@@ -73,6 +82,7 @@ public class ControlViajeDAO {
                 int idControl = 0;
                 double kmInicial = 0;
                 int idBus = 0; 
+                double salarioChoferActual = 0;
 
                 try (PreparedStatement psSelect = con.prepareStatement(sqlSelect)) {
                     psSelect.setInt(1, idViaje);
@@ -81,8 +91,9 @@ public class ControlViajeDAO {
                             idControl = rs.getInt("id_control");
                             kmInicial = rs.getDouble("kilometraje_inicial");
                             idBus = rs.getInt("id_bus");
+                            salarioChoferActual = rs.getDouble("salario_base"); 
                         } else {
-                            throw new SQLException("No se encontró el registro de salida de este viaje.");
+                            throw new SQLException("No se encontró el registro de salida o chofer de este viaje.");
                         }
                     }
                 }
@@ -96,7 +107,8 @@ public class ControlViajeDAO {
                     psControl.setDouble(2, control.getKilometrajeFinal());
                     psControl.setDouble(3, control.getGastoCombustible());
                     psControl.setDouble(4, depreciacionTotal);
-                    psControl.setInt(5, idControl);
+                    psControl.setDouble(5, salarioChoferActual); 
+                    psControl.setInt(6, idControl);
                     psControl.executeUpdate();
                 }
 

@@ -98,8 +98,28 @@ public class BusDAO implements MantenimientoAcceso<Bus> {
 
     
     @Override
-    public boolean actualizar(Bus objeto) {
-        return false;
+    public boolean actualizar(Bus bus) {
+ 
+        String sql = "UPDATE bus SET placa = ?, marca = ?, modelo = ?, anio = ?, capacidad_pasajeros = ?, foto_url = ? WHERE id_bus = ?";
+        
+        try (java.sql.Connection con = config.ConexionDB.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+             
+            ps.setString(1, bus.getPlaca());
+            ps.setString(2, bus.getMarca());
+            ps.setString(3, bus.getModelo());
+            ps.setInt(4, bus.getAnio());
+            ps.setInt(5, bus.getCapacidad()); 
+            ps.setString(6, bus.getFoto());
+            ps.setInt(7, bus.getIdBus());
+            
+            int filasAfectadas = ps.executeUpdate();
+            return filasAfectadas > 0;
+            
+        } catch (java.sql.SQLException e) {
+            System.out.println("Error al actualizar bus: " + e.getMessage());
+            return false;
+        }
     }
 
     

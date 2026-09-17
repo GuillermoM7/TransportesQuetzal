@@ -78,22 +78,48 @@
                                     </td>
                                     
                                     <td class="py-3">
-                                        <% if (usuarioSesion.getRol() == Rol.ADMIN_SUC) { %>
+                                        <% if (usuarioSesion.getRol() == Rol.ADMIN_SUC) { %>                                           
                                             <% if("solicitado".equalsIgnoreCase(v.getEstado())) { %>
                                                 <button type="button" class="btn btn-sm btn-outline-primary fw-bold" onclick="abrirModalCotizacion(<%= v.getIdViajePriv() %>)">
                                                     <i class="bi bi-calculator me-1"></i> Cotizar
                                                 </button>
+                                                
+                                                <button type="button" class="btn btn-sm btn-outline-warning ms-1" title="Editar Detalles" 
+                                                        onclick="abrirModalEditarPrivado(<%= v.getIdViajePriv() %>, '<%= v.getOrigen() %>', '<%= v.getDestino() %>', '<%= v.getFechaHoraSalida().toString().replace(" ", "T").substring(0, 16) %>', '<%= v.getFechaHoraRetorno().toString().replace(" ", "T").substring(0, 16) %>', <%= v.getCantidadPasajeros() %>, <%= v.getPrecioEstimado() %>)">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </button>
+                                                
+                                                <form action="ViajesPrivadosServlet" method="POST" class="m-0 d-inline ms-1" onsubmit="return confirm('¿Estás seguro de eliminar esta solicitud de viaje privado?');">
+                                                    <input type="hidden" name="accion" value="eliminar">
+                                                    <input type="hidden" name="idViaje" value="<%= v.getIdViajePriv() %>">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar Solicitud"><i class="bi bi-trash-fill"></i></button>
+                                                </form>
+
                                             <% } else if("cotizado".equalsIgnoreCase(v.getEstado())) { %>
-                                                <span class="text-muted small">Falta pago del cliente</span>
+                                                <span class="text-muted small me-2">Falta pago</span>
+                                                
+                                                <button type="button" class="btn btn-sm btn-outline-warning" title="Modificar Cotización/Detalles" 
+                                                        onclick="abrirModalEditarPrivado(<%= v.getIdViajePriv() %>, '<%= v.getOrigen() %>', '<%= v.getDestino() %>', '<%= v.getFechaHoraSalida().toString().replace(" ", "T").substring(0, 16) %>', '<%= v.getFechaHoraRetorno().toString().replace(" ", "T").substring(0, 16) %>', <%= v.getCantidadPasajeros() %>, <%= v.getPrecioEstimado() %>)">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </button>
+                                                
+                                                <form action="ViajesPrivadosServlet" method="POST" class="m-0 d-inline ms-1" onsubmit="return confirm('¿Estás seguro de eliminar esta cotización?');">
+                                                    <input type="hidden" name="accion" value="eliminar">
+                                                    <input type="hidden" name="idViaje" value="<%= v.getIdViajePriv() %>">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar Cotización"><i class="bi bi-trash-fill"></i></button>
+                                                </form>
+
                                             <% } else if("pagado".equalsIgnoreCase(v.getEstado())) { %>
-                                                <button type="button" class="btn btn-sm btn-outline-primary" title="Iniciar Viaje" onclick="abrirModalSalida(<%= v.getIdViajePriv() %>, 'privado', <%= v.getKilometrajeBus() %>,)">
+                                                <button type="button" class="btn btn-sm btn-outline-primary" title="Iniciar Viaje" onclick="abrirModalSalida(<%= v.getIdViajePriv() %>, 'privado', <%= v.getKilometrajeBus() %>)">
                                                     <i class="bi bi-play-circle-fill"></i> Iniciar
                                                 </button>
+                                                
                                             <% } else if("en_curso".equalsIgnoreCase(v.getEstado())) { %>
                                                 <button type="button" class="btn btn-sm btn-outline-success" title="Finalizar Viaje" onclick="abrirModalLlegada(<%= v.getIdViajePriv()%>, 'privado', <%= v.getKilometrajeInicial() %>)">
                                                     <i class="bi bi-check-circle-fill"></i> Finalizar
                                                 </button>
                                             <% } %>
+                                            
                                         <% } else { %>
                                             <span class="text-muted"><i class="bi bi-eye"></i> Lectura</span>
                                         <% } %>
@@ -153,8 +179,7 @@
                         
                         <div class="col-12 mt-4">
                             <label class="form-label fw-bold text-success"><i class="bi bi-cash-coin me-1"></i>Precio a Cobrar (Q)</label>
-                            <input type="number" step="0.01" class="form-control form-control-lg bg-light text-success fw-bold" 
-                                   name="precioEstimado" id="inputPrecioEstimado" required>
+                            <input type="number" step="0.01" min="0" class="form-control form-control-lg bg-light text-success fw-bold" name="precioEstimado" id="inputPrecioEstimado" required>
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0">
@@ -262,7 +287,53 @@
                 </form>
             </div>
         </div>
-    </div>                           
+    </div>
+                            
+    <div class="modal fade" id="modalEditarPrivado" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white bg-warning">
+                    <h5 class="modal-title fw-bold text-dark"><i class="bi bi-pencil-square me-2"></i>Editar Solicitud Privada</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="ViajePrivadoServlet" method="POST">
+                    <input type="hidden" name="accion" value="actualizar">
+                    <input type="hidden" name="idViaje" id="editPrivIdViaje">
+                    
+                    <div class="modal-body p-4 row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Lugar de Origen</label>
+                            <input type="text" class="form-control bg-light" name="origen" id="editPrivOrigen" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Lugar de Destino</label>
+                            <input type="text" class="form-control bg-light" name="destino" id="editPrivDestino" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Fecha/Hora de Salida</label>
+                            <input type="datetime-local" class="form-control bg-light" name="fechaSalida" id="editPrivSalida" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Fecha/Hora de Retorno</label>
+                            <input type="datetime-local" class="form-control bg-light" name="fechaRetorno" id="editPrivRetorno" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Cantidad de Pasajeros</label>
+                            <input type="number" class="form-control bg-light" name="pasajeros" id="editPrivPasajeros" min="1" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-muted">Cotización (Precio Q.)</label>
+                            <input type="number" class="form-control bg-light" name="precio" id="editPrivPrecio" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning fw-bold text-dark px-4">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>                        
 
     <script>
         
@@ -312,6 +383,19 @@
             inputKmFinal.value = ""; 
             
             var myModal = new bootstrap.Modal(document.getElementById('modalFinalizarViaje'));
+            myModal.show();
+        }
+        
+        function abrirModalEditarPrivado(id, origen, destino, salida, retorno, pasajeros, precio) {
+            document.getElementById('editPrivIdViaje').value = id;
+            document.getElementById('editPrivOrigen').value = origen;
+            document.getElementById('editPrivDestino').value = destino;
+            document.getElementById('editPrivSalida').value = salida;
+            document.getElementById('editPrivRetorno').value = retorno;
+            document.getElementById('editPrivPasajeros').value = pasajeros;
+            document.getElementById('editPrivPrecio').value = precio;
+            
+            var myModal = new bootstrap.Modal(document.getElementById('modalEditarPrivado'));
             myModal.show();
         }
     </script>
