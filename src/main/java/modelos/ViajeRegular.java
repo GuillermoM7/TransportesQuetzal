@@ -10,6 +10,8 @@ public class ViajeRegular {
     private Timestamp fechaHoraSalida;
     private Timestamp fechaHoraLlegadaEstimada;
     private String estado;
+    private double kilometrajeBus;
+    private double KilometrajeInicial;
     
     private String destinoRuta;
     private String placaBus;
@@ -21,7 +23,7 @@ public class ViajeRegular {
     public ViajeRegular() {}
 
     
-    public ViajeRegular(int idViajeReg, int idRuta, int idBus, int idChofer, Timestamp fechaHoraSalida, Timestamp fechaHoraLlegadaEstimada, String estado, String destinoRuta, String placaBus, String nombreChofer) {
+    public ViajeRegular(int idViajeReg, int idRuta, int idBus, int idChofer, Timestamp fechaHoraSalida, Timestamp fechaHoraLlegadaEstimada, String estado, String destinoRuta, String placaBus, String nombreChofer, double kilometrajeBus, double KilometrajeInicial) {
         this.idViajeReg = idViajeReg;
         this.idRuta = idRuta;
         this.idBus = idBus;
@@ -32,6 +34,8 @@ public class ViajeRegular {
         this.destinoRuta = destinoRuta;
         this.placaBus = placaBus;
         this.nombreChofer = nombreChofer;
+        this.kilometrajeBus = kilometrajeBus;
+        this.KilometrajeInicial = KilometrajeInicial;
     }
 
     
@@ -139,5 +143,20 @@ public class ViajeRegular {
         this.asientosDisponibles = asientosDisponibles;
     }
 
+    public double getKilometrajeBus() {
+        return kilometrajeBus;
+    }
+
+    public void setKilometrajeBus(double kilometrajeBus) {
+        this.kilometrajeBus = kilometrajeBus;
+    }
+
+    public double getKilometrajeInicial() {
+        return KilometrajeInicial;
+    }
+
+    public void setKilometrajeInicial(double KilometrajeInicial) {
+        this.KilometrajeInicial = KilometrajeInicial;
+    }
     
 }

@@ -15,6 +15,8 @@ public class ViajePrivado {
     private int cantidadPasajeros;
     private double precioEstimado;
     private String estado;
+    private double kilometrajeBus;
+    private double KilometrajeInicial;
     
     private double bonoChofer;
     private String nombreCliente;
@@ -23,7 +25,7 @@ public class ViajePrivado {
 
     public ViajePrivado() {}
 
-    public ViajePrivado(int idViajePriv, int idSucursal, int idUsuarioCliente, int idBus, int idChofer, String origen, String destino, Timestamp fechaHoraSalida, Timestamp fechaHoraRetorno, int cantidadPasajeros, double precioEstimado, String estado, String nombreCliente, String placaBus, String nombreChofer, double bonoChofer) {
+    public ViajePrivado(int idViajePriv, int idSucursal, int idUsuarioCliente, int idBus, int idChofer, String origen, String destino, Timestamp fechaHoraSalida, Timestamp fechaHoraRetorno, int cantidadPasajeros, double precioEstimado, String estado, String nombreCliente, String placaBus, String nombreChofer, double bonoChofer, double kilometrajeBus, double KilometrajeInicial) {
         this.idViajePriv = idViajePriv;
         this.idSucursal = idSucursal;
         this.idUsuarioCliente = idUsuarioCliente;
@@ -39,6 +41,8 @@ public class ViajePrivado {
         this.nombreCliente = nombreCliente;
         this.placaBus = placaBus;
         this.nombreChofer = nombreChofer;
+        this.kilometrajeBus = kilometrajeBus;
+        this.KilometrajeInicial = KilometrajeInicial;
     }
 
     public int getIdViajePriv() {
@@ -168,5 +172,20 @@ public class ViajePrivado {
     public void setBonoChofer(double bonoChofer) {
         this.bonoChofer = bonoChofer;
     }
-         
+
+    public double getKilometrajeBus() {
+        return kilometrajeBus;
+    }
+
+    public void setKilometrajeBus(double kilometrajeBus) {
+        this.kilometrajeBus = kilometrajeBus;
+    }
+
+    public double getKilometrajeInicial() {
+        return KilometrajeInicial;
+    }
+
+    public void setKilometrajeInicial(double KilometrajeInicial) {
+        this.KilometrajeInicial = KilometrajeInicial;
+    }    
 }

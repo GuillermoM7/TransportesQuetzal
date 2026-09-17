@@ -77,19 +77,13 @@
                                     <td class="py-3">
                                         <% if (usuarioSesion.getRol() == Rol.ADMIN_SUC) { %>
                                             <% if("programado".equalsIgnoreCase(v.getEstado())) { %>
-                                                <form action="ViajeRegularServlet" method="POST" class="m-0 d-inline" onsubmit="return confirm('¿Confirmar salida del bus?');">
-                                                    <input type="hidden" name="accion" value="cambiarEstado">
-                                                    <input type="hidden" name="idViaje" value="<%= v.getIdViajeReg() %>">
-                                                    <input type="hidden" name="nuevoEstado" value="en_curso">
-                                                    <button type="submit" class="btn btn-sm btn-outline-primary" title="Iniciar Viaje"><i class="bi bi-play-circle-fill"></i> Iniciar</button>
-                                                </form>
+                                                <button type="button" class="btn btn-sm btn-outline-primary" title="Iniciar Viaje" onclick="abrirModalSalida(<%= v.getIdViajeReg() %>, 'regular', <%= v.getKilometrajeBus() %>)">
+                                                    <i class="bi bi-play-circle-fill"></i> Iniciar
+                                                </button>
                                             <% } else if("en_curso".equalsIgnoreCase(v.getEstado())) { %>
-                                                <form action="ViajeRegularServlet" method="POST" class="m-0 d-inline" onsubmit="return confirm('¿Confirmar llegada al destino?');">
-                                                    <input type="hidden" name="accion" value="cambiarEstado">
-                                                    <input type="hidden" name="idViaje" value="<%= v.getIdViajeReg() %>">
-                                                    <input type="hidden" name="nuevoEstado" value="finalizado">
-                                                    <button type="submit" class="btn btn-sm btn-outline-success" title="Finalizar Viaje"><i class="bi bi-check-circle-fill"></i> Finalizar</button>
-                                                </form>
+                                                <button type="button" class="btn btn-sm btn-outline-success" title="Finalizar Viaje" onclick="abrirModalLlegada(<%= v.getIdViajeReg() %>, 'regular', <%= v.getKilometrajeInicial() %>)">
+                                                    <i class="bi bi-check-circle-fill"></i> Finalizar
+                                                </button>
                                             <% } else { %>
                                                 <span class="text-muted small"><i class="bi bi-lock-fill"></i> Completado</span>
                                             <% } %>
@@ -182,7 +176,135 @@
             </div>
         </div>
     </div>
-    <% } %>
+
+    <div class="modal fade" id="modalIniciarViaje" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white" style="background-color: #0A3323;">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-play-circle-fill me-2"></i>Registrar Salida de Viaje</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="IniciarViajeServlet" method="POST">
+                    <div class="modal-body p-4">
+                        <div class="alert alert-warning border-0 bg-opacity-10 small mb-4">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <strong>ATENCIÓN:</strong> Una vez registrada la salida, estos datos no podrán ser modificados. El estado del viaje cambiará automáticamente.
+                        </div>
+                        
+                        <input type="hidden" name="idViaje" id="modalIdViaje">
+                        <input type="hidden" name="tipoViaje" id="modalTipoViaje">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted">Hora Real de Salida</label>
+                            <input type="datetime-local" class="form-control bg-light" name="horaRealSalida" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted">Kilometraje Inicial del Bus</label>
+                            <div class="mb-2 text-primary small fw-bold">
+                                <i class="bi bi-speedometer2 me-1"></i> Kilometraje actual registrado: <span id="displayKmActual">0</span> Km
+                            </div>
+                            
+                            <div class="input-group">
+                                <input type="number" class="form-control bg-light" name="kilometrajeInicial" id="inputKmInicial" step="0.01" required>
+                                <span class="input-group-text fw-bold">Km</span>
+                            </div>
+                            <div class="form-text">No puedes ingresar un valor menor al kilometraje actual.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary fw-bold px-4" style="background-color: #0d6efd;">Confirmar Salida</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+                            
+    <div class="modal fade" id="modalFinalizarViaje" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white" style="background-color: #0A3323;">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-flag-fill me-2"></i>Registrar Llegada y Costos</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <form action="FinalizarViajeServlet" method="POST">
+                <div class="modal-body p-4">
+                        <div class="alert alert-info border-0 bg-opacity-10 small mb-4">
+                            <i class="bi bi-calculator me-2"></i>
+                            El sistema calculará automáticamente la depreciación del bus utilizando el kilometraje registrado en este momento.
+                        </div>
+                        
+                        <input type="hidden" name="idViaje" id="modalLlegadaIdViaje">
+                        <input type="hidden" name="tipoViaje" id="modalLlegadaTipoViaje">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted">Hora Real de Llegada</label>
+                            <input type="datetime-local" class="form-control bg-light" name="horaRealLlegada" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted">Kilometraje Final del Bus</label>
+
+                            <div class="mb-2 text-primary small fw-bold">
+                                <i class="bi bi-geo-alt-fill me-1"></i> Kilometraje al salir: <span id="displayKmInicialLlegada">0</span> Km
+                            </div>
+                            
+                            <div class="input-group">
+
+                                <input type="number" class="form-control bg-light" name="kilometrajeFinal" id="inputKmFinal" step="0.01" required>
+                                <span class="input-group-text fw-bold">Km</span>
+                            </div>
+                            <div class="form-text text-danger small">Debe ser mayor o igual al kilometraje de salida.</div>
+                        </div> 
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted">Gasto Total en Combustible</label>
+                            <div class="input-group">
+                                <span class="input-group-text fw-bold text-success">Q.</span>
+                                <input type="number" class="form-control bg-light" name="gastoCombustible" step="0.01" min="0" placeholder="Ej: 450.00" required>
+                            </div>
+                        </div>
+                    </div> 
+                    
+                    <div class="modal-footer bg-light border-0">
+                        <button type="button" class="btn btn-outline-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success fw-bold px-4">Finalizar Viaje</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>                        
+    
+    <% } %> 
+
+    <script>
+        function abrirModalSalida(idViaje, tipo, kmActual) {
+            document.getElementById('modalIdViaje').value = idViaje;
+            document.getElementById('modalTipoViaje').value = tipo;
+            document.getElementById('displayKmActual').innerText = kmActual;
+            
+            let inputKm = document.getElementById('inputKmInicial');
+            inputKm.min = kmActual;
+            inputKm.value = kmActual; 
+            
+            var myModal = new bootstrap.Modal(document.getElementById('modalIniciarViaje'));
+            myModal.show();
+        }
+        
+        function abrirModalLlegada(idViaje, tipo, kmInicial) {
+            document.getElementById('modalLlegadaIdViaje').value = idViaje;
+            document.getElementById('modalLlegadaTipoViaje').value = tipo;           
+            document.getElementById('displayKmInicialLlegada').innerText = kmInicial;
+            
+            let inputKmFinal = document.getElementById('inputKmFinal');
+            inputKmFinal.min = kmInicial;
+            inputKmFinal.value = ""; 
+            
+            var myModal = new bootstrap.Modal(document.getElementById('modalFinalizarViaje'));
+            myModal.show();
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

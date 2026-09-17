@@ -71,7 +71,7 @@
                 <li class="seccion-titulo mt-3" style="color: #e06666;">Admin Global</li>
                 <li><a href="SucursalServlet" class="nav-link"><i class="bi bi-building me-2"></i> Sucursales</a></li>
                 <li><a href="UsuarioServlet" class="nav-link"><i class="bi bi-people me-2"></i> Usuarios</a></li>
-                <li><a href="#" class="nav-link"><i class="bi bi-gear me-2"></i> Configuración</a></li>
+                <li><a href="ConfiguracionAdminServlet" class="nav-link"><i class="bi bi-gear me-2"></i> Configuración</a></li>
                 <li><a href="#" class="nav-link"><i class="bi bi-graph-up-arrow me-2"></i> Reportes Globales</a></li>
             <% } %>
         </ul>

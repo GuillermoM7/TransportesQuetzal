@@ -6,7 +6,10 @@ C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlado
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\CerrarSesionServlet.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\ChoferServlet.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\ComprarBoletoServlet.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\ConfiguracionAdminServlet.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\EditarPerfilServlet.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\FinalizarViajeServlet.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\IniciarViajeServlet.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\LoginServlet.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\MisBoletosServlet.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlador\MisViajesServlet.java
@@ -20,6 +23,8 @@ C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\controlado
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\BoletoDAO.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\BusDAO.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\ChoferDAO.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\ConfiguracionDAO.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\ControlViajeDAO.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\MantenimientoAcceso.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\RutaDAO.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\SucursalDAO.java
@@ -29,6 +34,7 @@ C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\dao\ViajeR
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\Boleto.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\Bus.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\Chofer.java
+C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\ControlViaje.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\enums\Estado.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\enums\EstadoViajePriv.java
 C:\Users\arcan\Documents\NetBeansProjects\Proyecto1IPC2\src\main\java\modelos\enums\EstadoViajeReg.java

@@ -80,16 +80,17 @@ public class ViajePrivadoDAO implements MantenimientoAcceso<ViajePrivado> {
     public List<ViajePrivado> listarPorSucursal(int idSucursal) {
         List<ViajePrivado> lista = new ArrayList<>();
         
-        String sql = "SELECT viaje privado *, usuario.nombre AS nombre_cliente, bus.placa AS placa_bus, chofer.nombre AS nombre_chofer " + "FROM viaje_privado" +
-                     "INNER JOIN usuario usuario ON viaje_privadop.id_usuario_cliente = usuario.id_usuario " +
+        String sql = "SELECT viaje_privado.*, usuario.nombre AS nombre_cliente, bus.placa AS placa_bus, bus.kilometraje_actual AS kilometraje_bus, chofer.nombre AS nombre_chofer, control_viaje.kilometraje_inicial " + "FROM viaje_privado " +
+                     "INNER JOIN usuario usuario ON viaje_privado.id_usuario_cliente = usuario.id_usuario " +
                      "LEFT JOIN bus ON viaje_privado.id_bus = bus.id_bus " +
-                     "LEFT JOIN chofer ON viaje_privado.id_chofer = chofer.id_chofer ";
+                     "LEFT JOIN chofer ON viaje_privado.id_chofer = chofer.id_chofer " + 
+                     "LEFT JOIN control_viaje ON viaje_privado.id_viaje_priv = control_viaje.id_viaje_priv ";
                      
         if (idSucursal > 0) {
-            sql = sql + "WHERE vp.id_sucursal = ? ";
+            sql = sql + " WHERE viaje_privado.id_sucursal = ? ";
         }
         
-        sql = sql + "ORDER BY vp.fecha_hora_salida ASC";
+        sql = sql + "ORDER BY viaje_privado.fecha_hora_salida ASC";
         
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -117,6 +118,8 @@ public class ViajePrivadoDAO implements MantenimientoAcceso<ViajePrivado> {
                     v.setNombreCliente(rs.getString("nombre_cliente"));                   
                     v.setPlacaBus(rs.getString("placa_bus") != null ? rs.getString("placa_bus") : "Por asignar");
                     v.setNombreChofer(rs.getString("nombre_chofer") != null ? rs.getString("nombre_chofer") : "Por asignar");
+                    v.setKilometrajeBus(rs.getDouble("kilometraje_bus"));
+                    v.setKilometrajeInicial(rs.getDouble("kilometraje_inicial"));
                     
                     lista.add(v);
                 }

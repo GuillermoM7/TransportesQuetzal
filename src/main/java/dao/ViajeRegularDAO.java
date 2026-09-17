@@ -40,15 +40,16 @@ public class ViajeRegularDAO implements MantenimientoAcceso<ViajeRegular> {
     public List<ViajeRegular> listarPorSucursalOrigen(int idSucursalOrigen) {
         List<ViajeRegular> lista = new ArrayList<>();
         
-        String sql = "SELECT vr.*, sd.nombre AS destino_ruta, b.placa AS placa_bus, c.nombre AS nombre_chofer " +
+        String sql = "SELECT vr.*, sd.nombre AS destino_ruta, b.placa AS placa_bus, b.kilometraje_actual AS kilometraje_bus, c.nombre AS nombre_chofer, control_viaje.kilometraje_inicial " +
                      "FROM viaje_regular vr " +
                      "INNER JOIN ruta r ON vr.id_ruta = r.id_ruta " +
                      "INNER JOIN sucursal sd ON r.id_sucursal_destino = sd.id_sucursal " +
                      "INNER JOIN bus b ON vr.id_bus = b.id_bus " +
-                     "INNER JOIN chofer c ON vr.id_chofer = c.id_chofer ";
+                     "INNER JOIN chofer c ON vr.id_chofer = c.id_chofer " +
+                     "LEFT JOIN control_viaje ON vr.id_viaje_reg = control_viaje.id_viaje_reg ";
                      
         if (idSucursalOrigen > 0) {
-            sql = sql + "WHERE r.id_sucursal_origen = ? ";
+            sql = sql + " WHERE r.id_sucursal_origen = ? ";
         }
         
         sql = sql + "ORDER BY vr.fecha_hora_salida ASC";
@@ -70,6 +71,8 @@ public class ViajeRegularDAO implements MantenimientoAcceso<ViajeRegular> {
                     viaje.setFechaHoraSalida(rs.getTimestamp("fecha_hora_salida"));
                     viaje.setFechaHoraLlegadaEstimada(rs.getTimestamp("fecha_hora_llegada_estimada"));
                     viaje.setEstado(rs.getString("estado"));
+                    viaje.setKilometrajeBus(rs.getDouble("kilometraje_bus"));
+                    viaje.setKilometrajeInicial(rs.getDouble("kilometraje_inicial"));
                     
                     viaje.setDestinoRuta(rs.getString("destino_ruta"));
                     viaje.setPlacaBus(rs.getString("placa_bus"));
